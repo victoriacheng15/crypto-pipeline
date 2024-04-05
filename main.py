@@ -1,21 +1,31 @@
-from bs4 import BeautifulSoup
-import requests, re
-
-def get_data():
-  URL = "https://www.coindesk.com/data/"
-  page = requests.get(URL).text
-  soup = BeautifulSoup(page, "html.parser")
-
-  # return soup.find_all(class_="price-liststyles__ListCardWrapper-sc-ouhin1-2")
-  return soup.find_all(class_=re.compile(r'price-liststyles__ListCardWrapper-sc-ouhin1-2'))
+import datetime
+from utils.db_operations import MongoDB
+from utils.extraction import get_data
 
 
 def main():
   items = get_data()
-  print(items[0])
-
+  for item in items:
+    title = item.find("h2").get_text().strip()
+    name, code = title.rsplit(maxsplit=1)
+    price = item.find(class_="typography__StyledTypography-sc-owin6q-0 lnOdBs").get_text()[1:].replace(",","")
+    extracted_date = datetime.datetime.now(tz=datetime.timezone.utc)
+    crypto = {
+      "name": name,
+      "code": code,
+      "price": price,
+      "date": extracted_date
+    }
+    mongo.insert_one("data", crypto)
+  count = mongo.get_counts("data")
+  print(f"{count} items inserted")
+  print(f"Items length: {len(items)}")
 
 if __name__ == "__main__":
-  print("\nstarting the process...\n")
-  main()
-  print("\nthe process is complete...\n")
+  mongo = MongoDB("crypto")
+
+  if mongo.connect():
+    print("\nstarting the process...\n")
+    main()
+    # mongo.delete_all("data")
+    print("\nthe process is complete...\n")
