@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS crypto_data (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    code VARCHAR(100) NOT NULL,
+    price NUMERIC NOT NULL,
+    extracted_date TIMESTAMP NOT NULL
+);
