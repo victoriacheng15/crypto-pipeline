@@ -1,5 +1,8 @@
 version: '3'
 
+env_file:
+  - .env
+
 services:
   postgres:
     container_name: crypto-postgres
@@ -7,13 +10,9 @@ services:
     restart: always
     ports:
       - "5432:5432"
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=mydb
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-      - crypto-postgres:/var/lib/postgres/data
+      - crypto-data:/var/lib/postgresql/data
     networks:
       - crypto_network
   extraction:
@@ -21,15 +20,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    env_file:
-      - .env
     networks:
       - crypto_network
     depends_on:
       - postgres
 
 volumes:
-  crypto-postgres:
+  crypto-data:
 
 networks:
   crypto_network:
