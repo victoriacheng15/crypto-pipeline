@@ -13,6 +13,7 @@ services:
       - POSTGRES_DB=mydb
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - crypto-postgres:/var/lib/postgres/data
     networks:
       - crypto_network
   extraction:
@@ -26,6 +27,9 @@ services:
       - crypto_network
     depends_on:
       - postgres
+
+volumes:
+  crypto-postgres:
 
 networks:
   crypto_network:
