@@ -1,8 +1,5 @@
 version: '3'
 
-env_file:
-  - .env
-
 services:
   postgres:
     container_name: crypto-postgres
@@ -10,6 +7,8 @@ services:
     restart: always
     ports:
       - "5432:5432"
+    env_file:
+      - .env
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - crypto-data:/var/lib/postgresql/data
@@ -20,6 +19,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    env_file:
+      - .env
     networks:
       - crypto_network
     depends_on:
