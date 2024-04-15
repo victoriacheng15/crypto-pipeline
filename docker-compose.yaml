@@ -13,7 +13,7 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - crypto-data:/var/lib/postgresql/data
     networks:
-      - crypto_network
+      - crypto-network
   extraction:
     container_name: crypto-extraction
     build:
@@ -22,7 +22,7 @@ services:
     env_file:
       - .env
     networks:
-      - crypto_network
+      - crypto-network
     depends_on:
       - postgres
 
@@ -30,4 +30,4 @@ volumes:
   crypto-data:
 
 networks:
-  crypto_network:
+  crypto-network:
