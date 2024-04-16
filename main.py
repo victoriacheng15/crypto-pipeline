@@ -1,31 +1,27 @@
-import datetime
+from sys import argv
 from utils.db_operations import MongoDB
-from utils.extraction import get_data
+from utils.extraction import get_coin_data, to_dict
 
 
-def main():
-  items = get_data()
-  for item in items:
-    title = item.find("h2").get_text().strip()
-    name, code = title.rsplit(maxsplit=1)
-    price = item.find(class_="typography__StyledTypography-sc-owin6q-0 lnOdBs").get_text()[1:].replace(",","")
-    extracted_date = datetime.datetime.now(tz=datetime.timezone.utc)
-    crypto = {
-      "name": name,
-      "code": code,
-      "price": price,
-      "date": extracted_date
-    }
-    mongo.insert_one("data", crypto)
-  count = mongo.get_counts("data")
-  print(f"{count} items inserted")
-  print(f"Items length: {len(items)}")
+def main(action):
+    if action == "data":
+        items = get_coin_data(2)
+        for item in items:
+            crypto = to_dict(item)
+            mongo.insert_one("data", crypto)
+        count = mongo.get_counts("data")
+        print(f"current data count: {count}")
+    elif action == "delete":
+        mongo.delete_all("data")
+    else:
+        print("Invalid action. Please enter 'data' or 'delete'.")
+
 
 if __name__ == "__main__":
-  mongo = MongoDB("crypto")
-
-  if mongo.connect():
-    print("\nstarting the process...\n")
-    main()
-    # mongo.delete_all("data")
-    print("\nthe process is complete...\n")
+    mongo = MongoDB("crypto")
+    action = argv[1]
+    print(action)
+    if mongo.connect():
+        print("\nstarting the process...\n")
+        main(action)
+        print("\nthe process is complete...\n")
