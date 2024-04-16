@@ -7,6 +7,7 @@ load_dotenv()
 
 MONGO_URI = os.environ.get("MONGO_URI")
 
+
 class MongoDB:
     def __init__(self, database_name):
         self.uri = MONGO_URI
@@ -16,7 +17,7 @@ class MongoDB:
 
     def connect(self):
         try:
-            self.client = MongoClient(self.uri, server_api=ServerApi('1'))
+            self.client = MongoClient(self.uri, server_api=ServerApi("1"))
             self.db = self.client[self.database_name]
             print("You successfully connected to MongoDB!")
             return True
@@ -35,17 +36,17 @@ class MongoDB:
             print(f"Inserted item with ID: {result.inserted_id}")
         except Exception as e:
             print("Error inserting item:", e)
-      
-    def get_counts(self, collection_name):
-      if self.client is None:
-          print("Not connected to MongoDB. Call connect() method first.")
-          return
 
-      try:
-          collection = self.db[collection_name]
-          return collection.count_documents({})
-      except Exception as e:
-          print("Error getting counts:", e)
+    def get_counts(self, collection_name):
+        if self.client is None:
+            print("Not connected to MongoDB. Call connect() method first.")
+            return
+
+        try:
+            collection = self.db[collection_name]
+            return collection.count_documents({})
+        except Exception as e:
+            print("Error getting counts:", e)
 
     def delete_all(self, collection_name):
         if self.client is None:
