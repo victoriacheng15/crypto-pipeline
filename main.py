@@ -1,27 +1,28 @@
+import logging, os
 from sys import argv
-from utils.db_operations import MongoDB
+from utils.mongo import MongoDB
 from utils.extraction import get_coin_data, to_dict
 
+COL_NAME = os.environ.get("MONGO_COLLECTION")
 
 def main(action):
+    logging.basicConfig(level=logging.INFO)
+    mongo = MongoDB()
     if action == "data":
-        items = get_coin_data(2)
-        for item in items:
-            crypto = to_dict(item)
-            mongo.insert_one("data", crypto)
-        count = mongo.get_counts("data")
-        print(f"current data count: {count}")
+        if mongo.connect():
+            items = get_coin_data(2)
+            for item in items:
+                crypto = to_dict(item)
+                mongo.insert_one("data", crypto)
+            count = mongo.get_counts(COL_NAME)
+            logging.info(f" The current data count in the collection: {count}")
     elif action == "delete":
-        mongo.delete_all("data")
+        if mongo.connect():
+            mongo.delete_all(COL_NAME)
     else:
-        print("Invalid action. Please enter 'data' or 'delete'.")
+        logging.error(f"Invalid action: {action}. Please enter 'data' or 'delete'.")
 
 
 if __name__ == "__main__":
-    mongo = MongoDB("crypto")
     action = argv[1]
-    print(action)
-    if mongo.connect():
-        print("\nstarting the process...\n")
-        main(action)
-        print("\nthe process is complete...\n")
+    main(action)
