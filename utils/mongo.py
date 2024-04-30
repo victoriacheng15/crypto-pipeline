@@ -26,6 +26,11 @@ class MongoDB:
         except Exception as e:
             self.logger.error(f"Failed to connect to the MongoDB. Error: {e}")
             return False
+    
+    def close(self):
+        if self.client:
+            self.client.close()
+            self.logger.info("The MongoDB connection has been closed.")
 
     def insert_one(self, collection_name, item):
         if self.client is None:
