@@ -12,3 +12,9 @@ data:
 
 delete:
 	@python3 main.py delete
+
+migration:
+	@python3 main.py migration
+
+postgres:
+	@docker compose up -d postgres
