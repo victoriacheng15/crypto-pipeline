@@ -6,6 +6,7 @@ from utils.extraction import get_coin_data, to_dict
 
 COL_NAME = os.environ.get("MONGO_COLLECTION")
 
+
 def insert_data(mongo):
     if not mongo.connect():
         return
@@ -17,6 +18,7 @@ def insert_data(mongo):
     count = mongo.get_counts(COL_NAME)
     logging.info(f"The current data count in the collection: {count}")
     mongo.close()
+
 
 def delete_data(mongo):
     if not mongo.connect():

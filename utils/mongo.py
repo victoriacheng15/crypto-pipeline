@@ -26,7 +26,7 @@ class MongoDB:
         except Exception as e:
             self.logger.error(f"Failed to connect to the MongoDB. Error: {e}")
             return False
-    
+
     def close(self):
         if self.client:
             self.client.close()
