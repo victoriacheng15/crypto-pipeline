@@ -5,6 +5,7 @@ from utils.extraction import get_coin_data, to_dict
 
 COL_NAME = os.environ.get("MONGO_COLLECTION")
 
+
 def main(action):
     logging.basicConfig(level=logging.INFO)
     mongo = MongoDB()

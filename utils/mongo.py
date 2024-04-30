@@ -49,7 +49,7 @@ class MongoDB:
             return collection.count_documents({})
         except Exception as e:
             self.logger.error(f"Error getting counts: {e}")
-    
+
     def get_all_documents(self, collection_name):
         if self.client is None:
             self.logger.error("Not connected to MongoDB. Call connect() method first.")
